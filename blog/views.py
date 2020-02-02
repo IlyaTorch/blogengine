@@ -3,8 +3,9 @@ from django.http import HttpResponse
 from .models import Post, Tag
 from django.views.generic import View
 from django.shortcuts import get_object_or_404
-from .utils import ObjectDetailMixin, ObjectCreateMixin, ObjectUpdateMixin
+from .utils import ObjectDetailMixin, ObjectCreateMixin, ObjectUpdateMixin, ObjectDeleteMixin
 from .forms import TagForm, PostForm
+from django.urls import reverse
 
 
 # Create your views here.
@@ -29,6 +30,12 @@ class PostUpdate(ObjectUpdateMixin, View):
     model_form = PostForm
 
 
+class PostDelete(ObjectDeleteMixin, View):
+    model = Post
+    template = 'blog/post_delete.html'
+    redirect_url = 'posts_list_url'
+
+
 def tags_list(request):
     tags = Tag.objects.all()
     return render(request, 'blog/tags_list.html', context={'tags': tags})
@@ -48,3 +55,9 @@ class TagUpdate(ObjectUpdateMixin, View):
     model = Tag
     template = 'blog/tag_update.html'
     model_form = TagForm
+
+
+class TagDelete(ObjectDeleteMixin, View):
+    model = Tag
+    template = 'blog/tag_delete.html'
+    redirect_url = 'tags_list_url'
